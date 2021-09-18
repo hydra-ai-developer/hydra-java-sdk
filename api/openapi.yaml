@@ -1,0 +1,451 @@
+openapi: 3.0.0
+info:
+  contact:
+    email: hello@hydra.ai
+    name: hydra.ai
+    url: https://www.hydra.ai
+  description: "hydra.ai makes it easy to use A.I. inside workflows and your apps.\
+    \ You can use hydra.ai for text classification, named entity recognition and senitment\
+    \ analysis. You can create your own A.I. models or use some of our pre-built models.\n\
+    \nThis API supports creating, training and invoking A.I. models hosted in your\
+    \ hydra.ai workspace. Create an account at https://build.hydra.ai to get started.\
+    \ You get get your API key in the settings section.    "
+  title: hydra.ai API
+  version: 1.0.0
+externalDocs:
+  description: Find out more about hydra.ai
+  url: https://www.hydra.ai
+servers:
+- url: https://api.hydra.ai/v1
+security:
+- apiAuth: []
+paths:
+  /workspaces/{workspaceId}/models:
+    post:
+      description: Create a new model in the workspace identified in the workspaceId
+        path paramter.
+      operationId: createModel
+      parameters:
+      - description: Workspace ID
+        explode: false
+        in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Model'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: successful operation
+      summary: Create a new model in the workspace
+      tags:
+      - model
+      x-contentType: application/json
+      x-accepts: application/json
+  /workspaces/{workspaceId}/models/{modelId}/data:
+    post:
+      description: Create a new model in the workspace identified in the workspaceId
+        path paramter.
+      operationId: addTrainingData
+      parameters:
+      - description: Workspace ID
+        explode: false
+        in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Model ID
+        explode: false
+        in: path
+        name: modelId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingData'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FileUpload'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: successful operation
+      summary: Add a training data object for a model
+      tags:
+      - model
+      x-contentType: application/json
+      x-accepts: application/json
+  /workspaces/{workspaceId}/models/{modelId}/train:
+    post:
+      description: Submit the model for training using the provided training data
+      operationId: trainModel
+      parameters:
+      - description: Workspace ID
+        explode: false
+        in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Model ID
+        explode: false
+        in: path
+        name: modelId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: successful operation
+      summary: Submit model for training
+      tags:
+      - model
+      x-accepts: application/json
+  /workspaces/{workspaceId}/models/{modelId}/stats:
+    post:
+      description: Shows the model score and last training time
+      operationId: showModelStats
+      parameters:
+      - description: Workspace ID
+        explode: false
+        in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Model ID
+        explode: false
+        in: path
+        name: modelId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: successful operation
+      summary: Shows model stats
+      tags:
+      - model
+      x-accepts: application/json
+  /workspaces/{workspaceId}/models/{modelId}/activate:
+    put:
+      description: Activate model
+      operationId: activateModel
+      parameters:
+      - description: Workspace ID
+        explode: false
+        in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Model ID
+        explode: false
+        in: path
+        name: modelId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: successful operation
+      summary: Activate model
+      tags:
+      - model
+      x-accepts: application/json
+  /workspaces/{workspaceId}/models/{modelId}/predict:
+    post:
+      description: Create anew model in the workspace identified in the workspaceId
+        path paramter.
+      operationId: predict
+      parameters:
+      - description: Workspace ID
+        explode: false
+        in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Model ID
+        explode: false
+        in: path
+        name: modelId
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PredictionRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: successful operation
+      summary: Make a prediction using a model
+      tags:
+      - model
+      x-contentType: application/json
+      x-accepts: application/json
+  /workspaces/{workspaceId}/models/{modelId}/deactivate:
+    put:
+      description: Deactivate model
+      operationId: deactivateModel
+      parameters:
+      - description: Workspace ID
+        explode: false
+        in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Model ID
+        explode: false
+        in: path
+        name: modelId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: successful operation
+      summary: Deactivate model
+      tags:
+      - model
+      x-accepts: application/json
+  /workspaces/{workspaceId}/models/{modelId}/delete:
+    delete:
+      description: Delete model
+      operationId: deleteModel
+      parameters:
+      - description: Workspace ID
+        explode: false
+        in: path
+        name: workspaceId
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Model ID
+        explode: false
+        in: path
+        name: modelId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+          description: successful operation
+      summary: Delete model
+      tags:
+      - model
+      x-accepts: application/json
+components:
+  requestBodies:
+    Model:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Model'
+      description: Model object that needs to be added to the store
+      required: true
+  schemas:
+    Model:
+      description: A model in the workspace
+      example:
+        templateRef: messageClassification
+        name: Message classification model
+        description: description
+        labels:
+        - name: name
+          label: label
+        - name: name
+          label: label
+      properties:
+        name:
+          example: Message classification model
+          type: string
+        description:
+          description: a short description of the model
+          type: string
+        templateRef:
+          description: model template reference
+          enum:
+          - messageClassification
+          - namedEntityRecognition
+          - sentimentAnalysis
+          - commonEntityRecognition
+          - industryLabelTagger
+          - boxFormData
+          type: string
+        labels:
+          description: provide label configurations only for custom models
+          items:
+            $ref: '#/components/schemas/LabelConfig'
+          type: array
+      required:
+      - name
+      - templateRef
+      title: Model
+      type: object
+    LabelConfig:
+      description: Label configuration to use in a model
+      example:
+        name: name
+        label: label
+      properties:
+        name:
+          description: label name
+          type: string
+        label:
+          description: display text for the label
+          type: string
+      required:
+      - label
+      - name
+      title: Label Configuation
+      type: object
+    Label:
+      description: Label for a given data point
+      example:
+        name: name
+        value: value
+      properties:
+        name:
+          description: label name
+          type: string
+        value:
+          description: data value for the label
+          type: string
+      required:
+      - name
+      - value
+      title: Label
+      type: object
+    TrainingData:
+      description: A training data entry for a model
+      example:
+        data: data
+        labels:
+        - name: name
+          value: value
+        - name: name
+          value: value
+      properties:
+        data:
+          description: training data string or object
+          type: string
+        labels:
+          description: labels
+          items:
+            $ref: '#/components/schemas/Label'
+          type: array
+      required:
+      - name
+      - templateRef
+      title: Training Data
+      type: object
+    FileUpload:
+      description: A file upload used for adding a batch of trainng data
+      properties:
+        file:
+          format: binary
+          type: string
+      required:
+      - file
+      title: File Upload
+      type: object
+    PredictionRequest:
+      description: A prdiction request
+      example:
+        data: data
+      properties:
+        data:
+          description: data string or object json string
+          type: string
+      required:
+      - data
+      title: Prediction request
+      type: object
+    ApiResponse:
+      description: Describes the result of an API call
+      example:
+        results: '{}'
+        errors:
+        - null
+        - null
+      properties:
+        results:
+          type: object
+        errors:
+          items:
+            $ref: '#/components/schemas/ApiError'
+          type: array
+      title: response
+      type: object
+    ApiError:
+      description: API errors list
+      title: error
+      type: object
+  securitySchemes:
+    apiAuth:
+      description: Prefix the value with \"Api-Key \"
+      in: header
+      name: Authorization
+      type: apiKey
+
